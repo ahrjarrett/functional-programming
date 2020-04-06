@@ -1,0 +1,925 @@
+
+* Working through Functor article:
+
+[[https://dev.to/gcanti/getting-started-with-fp-ts-functor-36ek][Article]]
+
+Refresh yourself on how lift works
+
+** Intro
+
+
+*** Goal
+
+The goal is to compose a pure program with an effectful one. To do that we need
+to do Functor stuff.
+
+
+*** QUIZ
+
+#+BEGIN_QUOTE
+Q: What's the difference between lift and map?
+
+
+A: Not much; argument order (in the =fp-ts= spec, anyway):
+
+|------+--------------------------------------+-----------------------------------------------------|
+| map  | (objectMapping, morphismMapping), OR | <A, B>(fa: Functor<A>, f: (b: A) => B)): Functor<B> |
+| lift | (morphismMapping, objectMapping), OR | <A, B>(f: (a: A) => B, fa: Functor<A>): Functor<B>  |
+#+END_QUOTE
+
+
+** Turn ApiResponse into a Functor:
+
+
+Let's define a Functor instance using fp-ts called =ApiResponse=
+
+#+BEGIN_SRC typescript
+import { Functor1 } from 'fp-ts/lib/Functor'
+
+export const URI = 'ApiResponse'
+
+export type URI = typeof URI
+
+declare module 'fp-ts/lib/HKT' {
+  interface URItoKind<A> {
+    ApiResponse: ApiResponse<A>
+  }
+}
+
+export interface ApiResponse<A> {
+  status:
+  | "success"
+  | "error"
+  message: A
+}
+
+function map<A, B>(fa: ApiResponse<A>, f: (a: A) => B): ApiResponse<B> {
+  return { ...fa, message: f(fa.message) }
+}
+
+// functor instance for "ApiResponse"
+export const functorResponse: Functor1<URI> = {
+  URI,
+  map
+}
+#+END_SRC
+
+But we still need to handle other cases (map is effectful, but unary; what if we
+needed binary? more?)
+
+ | Program f | Program g           | Composition |
+ | pure      | pure                | g ° f       |
+ | effectful | pure (unary)        | lift(g) ° f |
+ | effectful | pure (n-ary, n > 1) | ?           |
+
+ To do that we'll need to cover applicative functors:
+
+** Lifting binary, trinary, n-ary functions
+
+[[https://dev.to/gcanti/getting-started-with-fp-ts-applicative-1kb3][Article]]
+
+*** Understanding the problem:
+
+We need to use currying. You know currying.
+
+The goal here is to compose our pure program with an effectful program... /then/
+to compose another effect, & another, & another, & =n-other= ~(hyuck-hyuck)~
+
+Let's declare the type for liftA2:
+
+#+BEGIN_SRC typescript
+//<A, B>(f: (a: A) => B, fa: Functor<A>): Functor<B>
+liftA2<A, B, C>(f: (a: A) => C) => (fa: F<A>) => (fb: F<B>) => F<C>
+#+END_SRC
+
+But that means we now need to *apply* our curried function, and right now we
+don't have a way to do that:
+
+#+BEGIN_SRC typescript
+// using lift with our curried function:
+lift(g): (fb: F<B>) => F<(c: C) => D>
+#+END_SRC
+
+To do this, we need to =apply= it.
+
+*** Writing apply, or =ap=
+
+#+BEGIN_SRC typescript
+interface Apply<F> {
+  ap: <C, D>(fcd: HKT<F, (c: C) => D>, fc: HKT<F, C>) => HKT<F, D>
+}
+#+END_SRC
+
+Let's add an =of= operation that lets us lift a =value= (instead of lifing a
+function):
+
+#+BEGIN_SRC typescript
+interface Applicative<F> extends Apply<F> {
+  of: <A>(a: A) => HKT<F, A>
+}
+#+END_SRC
+
+
+*** Examples of applicative instances
+
+If any of this is fuzzy, I suggest working through these examples slowly. It can
+definitely be tricky:
+
+- *Array*
+
+  #+BEGIN_SRC typescript
+import { flatten } from 'fp-ts/lib/Array'
+
+const applicativeArray = {
+  map: <A, B>(fa: Array<A>, f: (a: A) => B): Array<B> => fa.map(f),
+  of: <A>(a: A): Array<A> => [a],
+  ap: <A, B>(fab: Array<(a: A) => B>, fa: Array<A>): Array<B> =>
+    flatten(fab.map(f => fa.map(f)))
+}
+  #+END_SRC
+
+- *Option*
+
+  #+BEGIN_SRC typescript
+import { Option, some, none, isNone } from 'fp-ts/lib/Option'
+
+const applicativeOption = {
+  map: <A, B>(fa: Option<A>, f: (a: A) => B): Option<B> =>
+    isNone(fa) ? none : some(f(fa.value)),
+  of: <A>(a: A): Option<A> => some(a),
+  ap: <A, B>(fab: Option<(a: A) => B>, fa: Option<A>): Option<B> =>
+    isNone(fab) ? none : applicativeOption.map(fa, fab.value)
+}
+  #+END_SRC
+
+- *Task*
+
+  #+BEGIN_SRC typescript
+import { Task } from 'fp-ts/lib/Task'
+
+export const applicativeTask = {
+  map: <A, B>(fa: Task<A>, f: (a: A) => B): Task<B> => () => fa().then(f),
+  of: <A>(a: A): Task<A> => () => Promise.resolve(a),
+  ap: <A, B>(fab: Task<(a: A) => B>, fa: Task<A>): Task<B> => () =>
+    Promise.all([fab(), fa()]).then(([f, a]) => f(a))
+}
+  #+END_SRC
+
+*** Actually implementing =liftA2=
+
+I'm gonna be honest; my eyes kind of glazed over.
+
+**** TODO: Write out =liftA2=, given an instance of =apply=
+(by hand / on whiteboard)
+
+**Note:** _liftA1 is just lift, the Functor operation_
+
+#+BEGIN_QUOTE
+Note: =listA1= is just =lift=, the =Functor= operation
+
+- The very end of the article :skull:
+#+END_QUOTE
+
+Our table can now reflect this:
+
+where =liftA1 = lift=:
+
+| Program f | Program g     | Composition     |
+|-----------+---------------+-----------------|
+| pure      | pure          | =g ° f=         |
+| effectful | pure, =n=-ary | =liftAn(g) ° f= |
+
+
+
+
+* Notes
+
+
+
+** Semigroups
+
+
+*** Property of associativity
+
+#+BEGIN_QUOTE
+Sub computations can be run in parallel mode.
+#+END_QUOTE
+
+Associative operations, if I've understanding properly, can run concurrently.
+
+
+*** Free semigroup
+
+[[file:readme.org#717][The free semigroup of =A= thus is simply the semigroup whose elements are all the possible finite and non-empty combinations of =A= elements.]]
+
+** ADTs
+
+#+BEGIN_QUOTE
+  In computer programming, especially functional programming and type
+  theory, an algebraic data type is a kind of composite type, i.e., *a
+  type formed by combining other types*.
+#+END_QUOTE
+
+
+*** COMMENT Product types
+
+Definition:
+
+#+BEGIN_QUOTE
+*`A product type is a collection of types Ti indexed by a set =I=*
+#+END_QUOTE
+
+Indexed by a set =I= is defined in the examples below:
+
+Examples of product types:
+
+1. =n-tuples=
+
+   where =I= is an interval of natural numbers;
+
+   (basically, the way an Array in JS is just an object whos keys are indices))
+
+2. =structs=
+
+   where =I= is a set of labels
+
+
+Let's use these to make types:
+
+#+BEGIN_SRC typescript
+// tuple:
+type MyTuple = [string, number]
+type MyFirst = MyTuple[0] // string
+type MyLast = MyTuple[1] // number
+
+
+// struct
+interface Dude {
+  name: string
+  dob: number
+}
+type Name = Dude['name'] // string
+#+END_SRC
+
+- *Note:* Note the TS syntax for When creating a type from a Struct's label (interface's key), we
+  access 
+
+
+*** Sum types
+
+Sum types can be *polymorphic* and *recursive*.
+
+
+#+BEGIN_EXAMPLE
+  const fold = <A, R>(
+    onNil: () => R,
+    onCons: (head: A, tail: List<A>) => R
+  ) => (fa: List<A>): R =>
+    fa.type === 'Nil' ? onNil() : onCons(fa.head, fa.tail)
+#+END_EXAMPLE
+
+* ADTs and functional error-handling
+  :PROPERTIES:
+  :CUSTOM_ID: adts-and-functional-error-handling
+  :END:
+
+A good first step when writing an application or feature is to define
+it's domain model. TypeScript offers many tools that help accomplishing
+this task. *Algebraic Data Types* (in short, ADTs) are one of these
+tools.
+
+#+BEGIN_HTML
+  <!--
+    What are the other tools?
+  -->
+#+END_HTML
+
+** What is an ADT?
+   :PROPERTIES:
+   :CUSTOM_ID: what-is-an-adt
+   :END:
+
+#+BEGIN_QUOTE
+  In computer programming, especially functional programming and type
+  theory, an algebraic data type is a kind of composite type, i.e., *a
+  type formed by combining other types*.
+#+END_QUOTE
+
+Two common families of algebraic data types are:
+
+- *product types*
+- *sum types*
+
+Let's begin with the more familiar ones: product types.
+
+** Product types
+   :PROPERTIES:
+   :CUSTOM_ID: product-types
+   :END:
+
+A product type is a collection of types Ti indexed by a set =I=.
+
+Two members of this family are =n=-tuples, where =I= is an interval of
+natural numbers:
+
+#+BEGIN_EXAMPLE
+  type Tuple1 = [string] // I = [0]
+  type Tuple2 = [string, number] // I = [0, 1]
+  type Tuple3 = [string, number, boolean] // I = [0, 1, 2]
+
+  // Accessing by index
+  type Fst = Tuple2[0] // string
+  type Snd = Tuple2[1] // number
+#+END_EXAMPLE
+
+and structs, where =I= is a set of labels:
+
+#+BEGIN_EXAMPLE
+  // I = {"name", "age"}
+  interface Person {
+    name: string
+    age: number
+  }
+
+  // Accessing by label
+  type Name = Person['name'] // string
+  type Age = Person['age'] // number
+#+END_EXAMPLE
+
+*** Why "product" types?
+    :PROPERTIES:
+    :CUSTOM_ID: why-product-types
+    :END:
+
+If we label with =C(A)= the number of elements of type =A= (also called
+in mathematics, *cardinality*), then the following identities hold true:
+
+#+BEGIN_EXAMPLE
+  C([A, B]) = C(A) * C(B)
+#+END_EXAMPLE
+
+#+BEGIN_QUOTE
+  the cardinality of a product is the product of the cardinalities
+#+END_QUOTE
+
+*Example*
+
+#+BEGIN_EXAMPLE
+  type Hour = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
+  type Period = 'AM' | 'PM'
+  type Clock = [Hour, Period]
+#+END_EXAMPLE
+
+Type =Clock= has =12 * 2 = 24= elements.
+
+*** When can I use a product type?
+    :PROPERTIES:
+    :CUSTOM_ID: when-can-i-use-a-product-type
+    :END:
+
+Each time it's components are *independent*.
+
+#+BEGIN_EXAMPLE
+  type Clock = [Hour, Period]
+#+END_EXAMPLE
+
+Here =Hour= and =Period= are independent: the value of =Hour= does not
+change the value of =Period=. Every legal pair of =[Hour, Period]= makes
+"sense" and is legal.
+
+** Sum types
+   :PROPERTIES:
+   :CUSTOM_ID: sum-types
+   :END:
+
+A sum type is a a data type that can hold a value of different (but
+limited) types. Only one of these types can be used in a single instance
+and there is generally a "tag" value differentiating those types.
+
+In TypeScript official docs those are called /tagged union types/.
+
+*Example* (redux actions)
+
+#+BEGIN_EXAMPLE
+  type Action =
+    | {
+        type: 'ADD_TODO'
+        text: string
+      }
+    | {
+        type: 'UPDATE_TODO'
+        id: number
+        text: string
+        completed: boolean
+      }
+    | {
+        type: 'DELETE_TODO'
+        id: number
+      }
+#+END_EXAMPLE
+
+The =type= tag makes sure every member of the union is disjointed.
+
+*Note*. The name of the field that acts as a tag is chosen by the
+developer. It doesn't have to be "type".
+
+*** Constructors
+    :PROPERTIES:
+    :CUSTOM_ID: constructors
+    :END:
+
+A sum type with =n= elements needs at least =n= *constructors*, one for
+each member:
+
+#+BEGIN_EXAMPLE
+  const add = (text: string): Action => ({
+    type: 'ADD_TODO',
+    text
+  })
+
+  const update = (
+    id: number,
+    text: string,
+    completed: boolean
+  ): Action => ({
+    type: 'UPDATE_TODO',
+    id,
+    text,
+    completed
+  })
+
+  const del = (id: number): Action => ({
+    type: 'DELETE_TODO',
+    id
+  })
+#+END_EXAMPLE
+
+Sum types can be *polymorphic* and *recursive*.
+
+*Example* (linked lists)
+
+#+BEGIN_EXAMPLE
+  //        ↓ type parameter
+  type List<A> =
+    | { type: 'Nil' }
+    | { type: 'Cons'; head: A; tail: List<A> }
+  //                                                              ↑ recursion
+#+END_EXAMPLE
+
+*** Pattern matching
+    :PROPERTIES:
+    :CUSTOM_ID: pattern-matching
+    :END:
+
+JavaScript doesn't have
+[[https://github.com/tc39/proposal-pattern-matching][pattern matching]]
+(neither does TypeScript) but we can simulate it with a =fold= function:
+
+#+BEGIN_EXAMPLE
+  const fold = <A, R>(
+    onNil: () => R,
+    onCons: (head: A, tail: List<A>) => R
+  ) => (fa: List<A>): R =>
+    fa.type === 'Nil' ? onNil() : onCons(fa.head, fa.tail)
+#+END_EXAMPLE
+
+*Note*. TypeScript offers a great feature for sum types: *exhaustive
+check*. The type checker is able to infer if all the cases are covered.
+
+*Example* (calculate the length of a =List= recursively)
+
+#+BEGIN_EXAMPLE
+  const length: <A>(fa: List<A>) => number = fold(
+    () => 0,
+    (_, tail) => 1 + length(tail)
+  )
+#+END_EXAMPLE
+
+*** Why "sum" types?
+    :PROPERTIES:
+    :CUSTOM_ID: why-sum-types
+    :END:
+
+Because the following identity holds true:
+
+#+BEGIN_EXAMPLE
+  C(A | B) = C(A) + C(B)
+#+END_EXAMPLE
+
+#+BEGIN_QUOTE
+  The sum of the cardinality is the sum of the cardinalities
+#+END_QUOTE
+
+*Example* (the =Option= type)
+
+#+BEGIN_EXAMPLE
+  type Option<A> =
+    | { _tag: 'None' }
+    | {
+        _tag: 'Some'
+        value: A
+      }
+#+END_EXAMPLE
+
+From the general formula =C(Option<A>) = 1 + C(A)= we can derive the
+cardinality of the =Option<boolean>= type: =1 + 2 = 3= abitanti.
+
+*** When should I use a sum type?
+    :PROPERTIES:
+    :CUSTOM_ID: when-should-i-use-a-sum-type
+    :END:
+
+When the components would be *dependent* if implemented with a product
+type.
+
+*Example* (component props)
+
+#+BEGIN_EXAMPLE
+  interface Props {
+    editable: boolean
+    onChange?: (text: string) => void
+  }
+
+  class Textbox extends React.Component<Props> {
+    render() {
+      if (this.props.editable) {
+        // error: Cannot invoke an object which is possibly 'undefined' :(
+        this.props.onChange(...)
+      }
+    }
+  }
+#+END_EXAMPLE
+
+The problem here is that =Props= is modelled like a product but
+=onChange= *depends* on =editable=.
+
+A sum type is a better choice:
+
+#+BEGIN_EXAMPLE
+  type Props =
+    | {
+        type: 'READONLY'
+      }
+    | {
+        type: 'EDITABLE'
+        onChange: (text: string) => void
+      }
+
+  class Textbox extends React.Component<Props> {
+    render() {
+      switch (this.props.type) {
+        case 'EDITABLE' :
+          this.props.onChange(...) // :)
+        ...
+      }
+    }
+  }
+#+END_EXAMPLE
+
+*Example* (node callbacks)
+
+#+BEGIN_EXAMPLE
+  declare function readFile(
+    path: string,
+    //         ↓ ---------- ↓ CallbackArgs
+    callback: (err?: Error, data?: string) => void
+  ): void
+#+END_EXAMPLE
+
+The result is modelled with a product type:
+
+#+BEGIN_EXAMPLE
+  type CallbackArgs = [Error | undefined, string | undefined]
+#+END_EXAMPLE
+
+there's an issue though: it's components are *dependent*: we either
+receive an error *or* a string, but not both: but the components are
+
+| err         | data        | legal? |
+|-------------+-------------+--------|
+| =Error=     | =undefined= | ✓      |
+| =undefined= | =string=    | ✓      |
+| =Error=     | =string=    | ✘      |
+| =undefined= | =undefined= | ✘      |
+
+A sum type would be a better choice...but which sum type?
+
+** Functional error handling
+   :PROPERTIES:
+   :CUSTOM_ID: functional-error-handling
+   :END:
+
+Let's see how to handle errors in a functional way.
+
+*** The =Option= type
+    :PROPERTIES:
+    :CUSTOM_ID: the-option-type
+    :END:
+
+The type =Option= represents the effect of a computation which may fail
+or return a type =A=:
+
+#+BEGIN_EXAMPLE
+  type Option<A> =
+    | { _tag: 'None' } // represents a failure
+    | { _tag: 'Some'; value: A } // represents a success
+#+END_EXAMPLE
+
+Constructors and pattern matching:
+
+#+BEGIN_EXAMPLE
+  // a nullary constructor can be implemented as a constant
+  const none: Option<never> = { _tag: 'None' }
+
+  const some = <A>(value: A): Option<A> => ({
+    _tag: 'Some',
+    value
+  })
+
+  const fold = <A, R>(
+    onNone: () => R,
+    onSome: (a: A) => R
+  ) => (fa: Option<A>): R =>
+    fa._tag === 'None' ? onNone() : onSome(fa.value)
+#+END_EXAMPLE
+
+The =Option= type can be used to avoid throwing exceptions or
+representing the optional values, thus we can move from...
+
+#+BEGIN_EXAMPLE
+  //                this is a lie ↓
+  function head<A>(as: Array<A>): A {
+    if (as.length === 0) {
+      throw new Error('Empty array')
+    }
+    return as[0]
+  }
+
+  let s: string
+  try {
+    s = String(head([]))
+  } catch (e) {
+    s = e.message
+  }
+#+END_EXAMPLE
+
+...where the type systems is in the absolute dark about the possibility
+of a failure, to...
+
+#+BEGIN_EXAMPLE
+  //                              ↓ the type system "knows" that this computation may fail
+  function head<A>(as: Array<A>): Option<A> {
+    return as.length === 0 ? none : some(as[0])
+  }
+
+  import { pipe } from 'fp-ts/lib/pipeable'
+
+  const s = pipe(
+    head([]),
+    fold(() => 'Empty array', a => String(a))
+  )
+#+END_EXAMPLE
+
+...where *the possibility of an error is encoded in the type system*.
+
+Now, let's suppose we want to "merge" two different =Option<A>=s,: there
+are four different cases:
+
+| x       | y       | concat(x, y) |
+|---------+---------+--------------|
+| none    | none    | none         |
+| some(a) | none    | none         |
+| none    | some(a) | none         |
+| some(a) | some(b) | ?            |
+
+There's an issue in the last case, we need to "merge" two different
+=A=s.
+
+Isn't that the job our old good friends =Semigroup=s!? We can request an
+instance of a =Semigroup<A>= and then derive an instance for the
+semigroup of =Option<A>=. That's exactly how the combinator
+=getApplySemigroup= from =fp-ts= works:
+
+#+BEGIN_EXAMPLE
+  import { semigroupSum } from 'fp-ts/lib/Semigroup'
+  import {
+    getApplySemigroup,
+    some,
+    none
+  } from 'fp-ts/lib/Option'
+
+  const S = getApplySemigroup(semigroupSum)
+
+  S.concat(some(1), none) // none
+  S.concat(some(1), some(2)) // some(3)
+#+END_EXAMPLE
+
+If we have a monoid instance for =A= then we can derive a monoid
+instance for =Option<A>= (via =getApplyMonoid=) that works this way
+(=some(empty)= will be the neutral (identity) element):
+
+#+BEGIN_HTML
+  <!--
+    TODO: FIX
+  -->
+#+END_HTML
+
+| x       | y       | concat(x, y)       |
+|---------+---------+--------------------|
+| none    | none    | none               |
+| some(a) | none    | none               |
+| none    | some(a) | none               |
+| some(a) | some(b) | some(concat(a, b)) |
+
+#+BEGIN_EXAMPLE
+  import {
+    getApplyMonoid,
+    some,
+    none
+  } from 'fp-ts/lib/Option'
+
+  const M = getApplyMonoid(monoidSum)
+
+  M.concat(some(1), none) // none
+  M.concat(some(1), some(2)) // some(3)
+  M.concat(some(1), M.empty) // some(1)
+#+END_EXAMPLE
+
+We can derive another two monoids for =Option<A>= (for every =A=):
+
+1. =getFirstMonoid=...
+
+Monoid returning the left-most non-=None= value:
+
+| x       | y       | concat(x, y) |
+|---------+---------+--------------|
+| none    | none    | none         |
+| some(a) | none    | some(a)      |
+| none    | some(a) | some(a)      |
+| some(a) | some(b) | some(a)      |
+
+#+BEGIN_EXAMPLE
+  import {
+    getFirstMonoid,
+    some,
+    none
+  } from 'fp-ts/lib/Option'
+
+  const M = getFirstMonoid<number>()
+
+  M.concat(some(1), none) // some(1)
+  M.concat(some(1), some(2)) // some(1)
+#+END_EXAMPLE
+
+2. ...and it's *dual*: =getLastMonoid=
+
+Monoid returning the right-most non-=None= value:
+
+| x       | y       | concat(x, y) |
+|---------+---------+--------------|
+| none    | none    | none         |
+| some(a) | none    | some(a)      |
+| none    | some(a) | some(a)      |
+| some(a) | some(b) | some(b)      |
+
+#+BEGIN_EXAMPLE
+  import { getLastMonoid, some, none } from 'fp-ts/lib/Option'
+
+  const M = getLastMonoid<number>()
+
+  M.concat(some(1), none) // some(1)
+  M.concat(some(1), some(2)) // some(2)
+#+END_EXAMPLE
+
+Example given, =getLastMonoid= can be used to handle optional values:
+
+#+BEGIN_EXAMPLE
+  import { Monoid, getStructMonoid } from 'fp-ts/lib/Monoid'
+  import {
+    Option,
+    some,
+    none,
+    getLastMonoid
+  } from 'fp-ts/lib/Option'
+
+  /** VSCode settings */
+  interface Settings {
+    /** Controls the font family */
+    fontFamily: Option<string>
+    /** Controls the font size in pixels */
+    fontSize: Option<number>
+    /** Limit the width of the minimap to render at most a certain number of columns. */
+    maxColumn: Option<number>
+  }
+
+  const monoidSettings: Monoid<Settings> = getStructMonoid({
+    fontFamily: getLastMonoid<string>(),
+    fontSize: getLastMonoid<number>(),
+    maxColumn: getLastMonoid<number>()
+  })
+
+  const workspaceSettings: Settings = {
+    fontFamily: some('Courier'),
+    fontSize: none,
+    maxColumn: some(80)
+  }
+
+  const userSettings: Settings = {
+    fontFamily: some('Fira Code'),
+    fontSize: some(12),
+    maxColumn: none
+  }
+
+  /** userSettings overrides workspaceSettings */
+  monoidSettings.concat(workspaceSettings, userSettings)
+  /*
+  { fontFamily: some("Fira Code"),
+    fontSize: some(12),
+    maxColumn: some(80) }
+  */
+#+END_EXAMPLE
+
+*** The =Either= type
+    :PROPERTIES:
+    :CUSTOM_ID: the-either-type
+    :END:
+
+A common usage of =Either= is as an alternative for =Option= for
+handling the possibility of missing values. In such use case, =None= is
+replaced by =Left= which holds the useful information. =Right= replaces
+=Some=. As a convention =Left= is used for failure while =Right= is used
+for success.
+
+#+BEGIN_EXAMPLE
+  type Either<E, A> =
+    | { _tag: 'Left'; left: E } // represents a failure
+    | { _tag: 'Right'; right: A } // represents a success
+#+END_EXAMPLE
+
+Constructors and pattern matching:
+
+#+BEGIN_EXAMPLE
+  const left = <E, A>(left: E): Either<E, A> => ({
+    _tag: 'Left',
+    left
+  })
+
+  const right = <E, A>(right: A): Either<E, A> => ({
+    _tag: 'Right',
+    right
+  })
+
+  const fold = <E, A, R>(
+    onLeft: (left: E) => R,
+    onRight: (right: A) => R
+  ) => (fa: Either<E, A>): R =>
+    fa._tag === 'Left' ? onLeft(fa.left) : onRight(fa.right)
+#+END_EXAMPLE
+
+Let's get back to the callback example:
+
+#+BEGIN_EXAMPLE
+  declare function readFile(
+    path: string,
+    callback: (err?: Error, data?: string) => void
+  ): void
+
+  readFile('./myfile', (err, data) => {
+    let message: string
+    if (err !== undefined) {
+      message = `Error: ${err.message}`
+    } else if (data !== undefined) {
+      message = `Data: ${data.trim()}`
+    } else {
+      // should never happen
+      message = 'The impossible happened'
+    }
+    console.log(message)
+  })
+#+END_EXAMPLE
+
+we can change the signature in:
+
+#+BEGIN_EXAMPLE
+  declare function readFile(
+    path: string,
+    callback: (result: Either<Error, string>) => void
+  ): void
+#+END_EXAMPLE
+
+and consume the API in this new way:
+
+#+BEGIN_EXAMPLE
+  import { flow } from 'fp-ts/lib/function'
+
+  readFile(
+    './myfile',
+    flow(
+      fold(
+        err => `Error: ${err.message}`,
+        data => `Data: ${data.trim()}`
+      ),
+      console.log
+    )
+  )
+#+END_EXAMPLE
