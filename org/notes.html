@@ -1,0 +1,1449 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-04-05 Sun 16:38 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Andrew Jarrett" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPL-v3-or-Later
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.cacheClassElem = elem.className;
+         elem.cacheClassTarget = target.className;
+         target.className = "code-highlighted";
+         elem.className   = "code-highlighted";
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(elem.cacheClassElem)
+         elem.className = elem.cacheClassElem;
+       if(elem.cacheClassTarget)
+         target.className = elem.cacheClassTarget;
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="content">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org9deb1c2">1. Working through Functor article:</a>
+<ul>
+<li><a href="#org0eb71bc">1.1. Turn ApiResponse into a Functor:</a></li>
+<li><a href="#orged04a6f">1.2. <code>ap</code></a></li>
+</ul>
+</li>
+<li><a href="#org0a2fedc">2. Notes</a>
+<ul>
+<li><a href="#org152c46c">2.1. Semigroups</a>
+<ul>
+<li><a href="#org53cab0e">2.1.1. Property of associativity</a></li>
+<li><a href="#org5b12686">2.1.2. Free semigroup</a></li>
+</ul>
+</li>
+<li><a href="#org96b99b8">2.2. ADTs</a>
+<ul>
+<li><a href="#org8a61a08">2.2.1. Sum types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#adts-and-functional-error-handling">3. ADTs and functional error-handling</a>
+<ul>
+<li><a href="#what-is-an-adt">3.1. What is an ADT?</a></li>
+<li><a href="#product-types">3.2. Product types</a>
+<ul>
+<li><a href="#why-product-types">3.2.1. Why &ldquo;product&rdquo; types?</a></li>
+<li><a href="#when-can-i-use-a-product-type">3.2.2. When can I use a product type?</a></li>
+</ul>
+</li>
+<li><a href="#sum-types">3.3. Sum types</a>
+<ul>
+<li><a href="#constructors">3.3.1. Constructors</a></li>
+<li><a href="#pattern-matching">3.3.2. Pattern matching</a></li>
+<li><a href="#why-sum-types">3.3.3. Why &ldquo;sum&rdquo; types?</a></li>
+<li><a href="#when-should-i-use-a-sum-type">3.3.4. When should I use a sum type?</a></li>
+</ul>
+</li>
+<li><a href="#functional-error-handling">3.4. Functional error handling</a>
+<ul>
+<li><a href="#the-option-type">3.4.1. The <code>Option</code> type</a></li>
+<li><a href="#the-either-type">3.4.2. The <code>Either</code> type</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org9deb1c2" class="outline-2">
+<h2 id="org9deb1c2"><span class="section-number-2">1</span> Working through Functor article:</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="https://dev.to/gcanti/getting-started-with-fp-ts-functor-36ek">Article</a>
+</p>
+
+<p>
+Refresh yourself on how lift works
+</p>
+
+
+<p>
+QUIZ:
+</p>
+<blockquote>
+<p>
+Q: What&rsquo;s the difference between lift and map?
+</p>
+
+
+<p>
+A: Not much; argument order (in the <code>fp-ts</code> spec, anyway):
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">map</td>
+<td class="org-left">(objectMapping, morphismMapping), OR</td>
+<td class="org-left">&lt;A, B&gt;(fa: Functor&lt;A&gt;, f: (b: A) =&gt; B)): Functor&lt;B&gt;</td>
+</tr>
+
+<tr>
+<td class="org-left">lift</td>
+<td class="org-left">(morphismMapping, objectMapping), OR</td>
+<td class="org-left">&lt;A, B&gt;(f: (a: A) =&gt; B, fa: Functor&lt;A&gt;): Functor&lt;B&gt;</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</div>
+
+
+
+
+<div id="outline-container-org0eb71bc" class="outline-3">
+<h3 id="org0eb71bc"><span class="section-number-3">1.1</span> Turn ApiResponse into a Functor:</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Let&rsquo;s define a Functor instance using fp-ts called <code>ApiResponse</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript"><span style="color: #9587DD;">import</span> <span style="color: #0D9C94;">{</span> Functor1 <span style="color: #0D9C94;">}</span> <span style="color: #9587DD;">from</span> <span style="color: #62D2DB;">'fp-ts/lib/Functor'</span>
+
+<span style="color: #9587DD;">export</span> <span style="color: #9587DD;">const</span> <span style="color: #41b0f3;">URI</span> = <span style="color: #62D2DB;">'ApiResponse'</span>
+
+<span style="color: #9587DD;">export</span> <span style="color: #9587DD;">type</span> <span style="color: #0D9C94;">URI</span> = <span style="color: #9587DD;">typeof</span> URI
+
+<span style="color: #9587DD;">declare</span> <span style="color: #9587DD;">module</span> <span style="color: #62D2DB;">'fp-ts/lib/HKT'</span> <span style="color: #0D9C94;">{</span>
+  <span style="color: #9587DD;">interface</span> <span style="color: #0D9C94;">URItoKind</span>&lt;<span style="color: #0D9C94;">A</span>&gt; <span style="color: #47ba99;">{</span>
+    ApiResponse: ApiResponse&lt;<span style="color: #0D9C94;">A</span>&gt;
+  <span style="color: #47ba99;">}</span>
+<span style="color: #0D9C94;">}</span>
+
+<span style="color: #9587DD;">export</span> <span style="color: #9587DD;">interface</span> <span style="color: #0D9C94;">ApiResponse</span>&lt;<span style="color: #0D9C94;">A</span>&gt; <span style="color: #0D9C94;">{</span>
+  status:
+  | <span style="color: #62D2DB;">"success"</span>
+  | <span style="color: #62D2DB;">"error"</span>
+  message: A
+<span style="color: #0D9C94;">}</span>
+
+<span style="color: #9587DD;">function</span> <span style="color: #CE8EC8;">map</span>&lt;<span style="color: #0D9C94;">A</span>, <span style="color: #0D9C94;">B</span>&gt;<span style="color: #0D9C94;">(</span><span style="color: #41b0f3;">fa</span>: <span style="color: #41b0f3;">ApiResponse</span>&lt;<span style="color: #0D9C94;">A</span>&gt;, <span style="color: #41b0f3;">f</span>: <span style="color: #47ba99;">(</span><span style="color: #41b0f3;">a</span>: <span style="color: #41b0f3;">A</span><span style="color: #47ba99;">)</span> <span style="color: #9587DD;">=&gt;</span> B<span style="color: #0D9C94;">)</span>: ApiResponse&lt;<span style="color: #0D9C94;">B</span>&gt; <span style="color: #0D9C94;">{</span>
+  <span style="color: #9587DD;">return</span> <span style="color: #47ba99;">{</span> ...fa, message: <span style="color: #CE8EC8;">f</span><span style="color: #62D2DB;">(</span>fa.message<span style="color: #62D2DB;">)</span> <span style="color: #47ba99;">}</span>
+<span style="color: #0D9C94;">}</span>
+
+<span style="color: #454459;">// </span><span style="color: #454459;">functor instance for "ApiResponse"</span>
+<span style="color: #9587DD;">export</span> <span style="color: #9587DD;">const</span> <span style="color: #41b0f3;">functorResponse</span>: Functor1&lt;<span style="color: #0D9C94;">URI</span>&gt; = <span style="color: #0D9C94;">{</span>
+  URI,
+  map
+<span style="color: #0D9C94;">}</span>
+</pre>
+</div>
+
+<p>
+But we still need to handle other cases (map is effectful, but unary; what if we
+needed binary? more?)
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Program f</td>
+<td class="org-left">Program g</td>
+<td class="org-left">Composition</td>
+</tr>
+
+<tr>
+<td class="org-left">pure</td>
+<td class="org-left">pure</td>
+<td class="org-left">g ° f</td>
+</tr>
+
+<tr>
+<td class="org-left">effectful</td>
+<td class="org-left">pure (unary)</td>
+<td class="org-left">lift(g) ° f</td>
+</tr>
+
+<tr>
+<td class="org-left">effectful</td>
+<td class="org-left">pure (n-ary, n &gt; 1)</td>
+<td class="org-left">?</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+To do that we&rsquo;ll need to cover applicative functors:
+</p>
+</div>
+</div>
+
+<div id="outline-container-orged04a6f" class="outline-3">
+<h3 id="orged04a6f"><span class="section-number-3">1.2</span> <code>ap</code></h3>
+</div>
+</div>
+
+<div id="outline-container-org0a2fedc" class="outline-2">
+<h2 id="org0a2fedc"><span class="section-number-2">2</span> Notes</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org152c46c" class="outline-3">
+<h3 id="org152c46c"><span class="section-number-3">2.1</span> Semigroups</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="outline-container-org53cab0e" class="outline-4">
+<h4 id="org53cab0e"><span class="section-number-4">2.1.1</span> Property of associativity</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<blockquote>
+<p>
+Sub computations can be run in parallel mode.
+</p>
+</blockquote>
+
+<p>
+Associative operations, if I&rsquo;ve understanding properly, can run concurrently.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org5b12686" class="outline-4">
+<h4 id="org5b12686"><span class="section-number-4">2.1.2</span> Free semigroup</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+<a href="readme.org#717">The free semigroup of <code>A</code> thus is simply the semigroup whose elements are all the possible finite and non-empty combinations of <code>A</code> elements.</a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org96b99b8" class="outline-3">
+<h3 id="org96b99b8"><span class="section-number-3">2.2</span> ADTs</h3>
+<div class="outline-text-3" id="text-2-2">
+<blockquote>
+<p>
+In computer programming, especially functional programming and type
+theory, an algebraic data type is a kind of composite type, i.e., <b>a
+type formed by combining other types</b>.
+</p>
+</blockquote>
+</div>
+
+
+<div id="outline-container-org8a61a08" class="outline-4">
+<h4 id="org8a61a08"><span class="section-number-4">2.2.1</span> Sum types</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+Sum types can be <b>polymorphic</b> and <b>recursive</b>.
+</p>
+
+
+<pre class="example">
+  const fold = &lt;A, R&gt;(
+    onNil: () =&gt; R,
+    onCons: (head: A, tail: List&lt;A&gt;) =&gt; R
+  ) =&gt; (fa: List&lt;A&gt;): R =&gt;
+    fa.type === 'Nil' ? onNil() : onCons(fa.head, fa.tail)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-adts-and-functional-error-handling" class="outline-2">
+<h2 id="adts-and-functional-error-handling"><span class="section-number-2">3</span> ADTs and functional error-handling</h2>
+<div class="outline-text-2" id="text-adts-and-functional-error-handling">
+<p>
+A good first step when writing an application or feature is to define
+it&rsquo;s domain model. TypeScript offers many tools that help accomplishing
+this task. <b>Algebraic Data Types</b> (in short, ADTs) are one of these
+tools.
+</p>
+
+<div class="HTML">
+<p>
+&lt;!&#x2013;
+  What are the other tools?
+&#x2013;&gt;
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-what-is-an-adt" class="outline-3">
+<h3 id="what-is-an-adt"><span class="section-number-3">3.1</span> What is an ADT?</h3>
+<div class="outline-text-3" id="text-what-is-an-adt">
+<blockquote>
+<p>
+In computer programming, especially functional programming and type
+theory, an algebraic data type is a kind of composite type, i.e., <b>a
+type formed by combining other types</b>.
+</p>
+</blockquote>
+
+<p>
+Two common families of algebraic data types are:
+</p>
+
+<ul class="org-ul">
+<li><b>product types</b></li>
+<li><b>sum types</b></li>
+</ul>
+
+<p>
+Let&rsquo;s begin with the more familiar ones: product types.
+</p>
+</div>
+</div>
+
+<div id="outline-container-product-types" class="outline-3">
+<h3 id="product-types"><span class="section-number-3">3.2</span> Product types</h3>
+<div class="outline-text-3" id="text-product-types">
+<p>
+A product type is a collection of types Ti indexed by a set <code>I</code>.
+</p>
+
+<p>
+Two members of this family are <code>n</code>-tuples, where <code>I</code> is an interval of
+natural numbers:
+</p>
+
+<pre class="example">
+  type Tuple1 = [string] // I = [0]
+  type Tuple2 = [string, number] // I = [0, 1]
+  type Tuple3 = [string, number, boolean] // I = [0, 1, 2]
+
+  // Accessing by index
+  type Fst = Tuple2[0] // string
+  type Snd = Tuple2[1] // number
+</pre>
+
+<p>
+and structs, where <code>I</code> is a set of labels:
+</p>
+
+<pre class="example">
+  // I = {"name", "age"}
+  interface Person {
+    name: string
+    age: number
+  }
+
+  // Accessing by label
+  type Name = Person['name'] // string
+  type Age = Person['age'] // number
+</pre>
+</div>
+
+<div id="outline-container-why-product-types" class="outline-4">
+<h4 id="why-product-types"><span class="section-number-4">3.2.1</span> Why &ldquo;product&rdquo; types?</h4>
+<div class="outline-text-4" id="text-why-product-types">
+<p>
+If we label with <code>C(A)</code> the number of elements of type <code>A</code> (also called
+in mathematics, <b>cardinality</b>), then the following identities hold true:
+</p>
+
+<pre class="example">
+  C([A, B]) = C(A) * C(B)
+</pre>
+
+<blockquote>
+<p>
+the cardinality of a product is the product of the cardinalities
+</p>
+</blockquote>
+
+<p>
+<b>Example</b>
+</p>
+
+<pre class="example">
+  type Hour = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
+  type Period = 'AM' | 'PM'
+  type Clock = [Hour, Period]
+</pre>
+
+<p>
+Type <code>Clock</code> has <code>12 * 2 = 24</code> elements.
+</p>
+</div>
+</div>
+
+<div id="outline-container-when-can-i-use-a-product-type" class="outline-4">
+<h4 id="when-can-i-use-a-product-type"><span class="section-number-4">3.2.2</span> When can I use a product type?</h4>
+<div class="outline-text-4" id="text-when-can-i-use-a-product-type">
+<p>
+Each time it&rsquo;s components are <b>independent</b>.
+</p>
+
+<pre class="example">
+  type Clock = [Hour, Period]
+</pre>
+
+<p>
+Here <code>Hour</code> and <code>Period</code> are independent: the value of <code>Hour</code> does not
+change the value of <code>Period</code>. Every legal pair of <code>[Hour, Period]</code> makes
+&ldquo;sense&rdquo; and is legal.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sum-types" class="outline-3">
+<h3 id="sum-types"><span class="section-number-3">3.3</span> Sum types</h3>
+<div class="outline-text-3" id="text-sum-types">
+<p>
+A sum type is a a data type that can hold a value of different (but
+limited) types. Only one of these types can be used in a single instance
+and there is generally a &ldquo;tag&rdquo; value differentiating those types.
+</p>
+
+<p>
+In TypeScript official docs those are called <i>tagged union types</i>.
+</p>
+
+<p>
+<b>Example</b> (redux actions)
+</p>
+
+<pre class="example">
+  type Action =
+    | {
+        type: 'ADD_TODO'
+        text: string
+      }
+    | {
+        type: 'UPDATE_TODO'
+        id: number
+        text: string
+        completed: boolean
+      }
+    | {
+        type: 'DELETE_TODO'
+        id: number
+      }
+</pre>
+
+<p>
+The <code>type</code> tag makes sure every member of the union is disjointed.
+</p>
+
+<p>
+<b>Note</b>. The name of the field that acts as a tag is chosen by the
+developer. It doesn&rsquo;t have to be &ldquo;type&rdquo;.
+</p>
+</div>
+
+<div id="outline-container-constructors" class="outline-4">
+<h4 id="constructors"><span class="section-number-4">3.3.1</span> Constructors</h4>
+<div class="outline-text-4" id="text-constructors">
+<p>
+A sum type with <code>n</code> elements needs at least <code>n</code> <b>constructors</b>, one for
+each member:
+</p>
+
+<pre class="example">
+  const add = (text: string): Action =&gt; ({
+    type: 'ADD_TODO',
+    text
+  })
+
+  const update = (
+    id: number,
+    text: string,
+    completed: boolean
+  ): Action =&gt; ({
+    type: 'UPDATE_TODO',
+    id,
+    text,
+    completed
+  })
+
+  const del = (id: number): Action =&gt; ({
+    type: 'DELETE_TODO',
+    id
+  })
+</pre>
+
+<p>
+Sum types can be <b>polymorphic</b> and <b>recursive</b>.
+</p>
+
+<p>
+<b>Example</b> (linked lists)
+</p>
+
+<pre class="example">
+  //        ↓ type parameter
+  type List&lt;A&gt; =
+    | { type: 'Nil' }
+    | { type: 'Cons'; head: A; tail: List&lt;A&gt; }
+  //                                                              ↑ recursion
+</pre>
+</div>
+</div>
+
+<div id="outline-container-pattern-matching" class="outline-4">
+<h4 id="pattern-matching"><span class="section-number-4">3.3.2</span> Pattern matching</h4>
+<div class="outline-text-4" id="text-pattern-matching">
+<p>
+JavaScript doesn&rsquo;t have
+<a href="https://github.com/tc39/proposal-pattern-matching">pattern matching</a>
+(neither does TypeScript) but we can simulate it with a <code>fold</code> function:
+</p>
+
+<pre class="example">
+  const fold = &lt;A, R&gt;(
+    onNil: () =&gt; R,
+    onCons: (head: A, tail: List&lt;A&gt;) =&gt; R
+  ) =&gt; (fa: List&lt;A&gt;): R =&gt;
+    fa.type === 'Nil' ? onNil() : onCons(fa.head, fa.tail)
+</pre>
+
+<p>
+<b>Note</b>. TypeScript offers a great feature for sum types: <b>exhaustive
+check</b>. The type checker is able to infer if all the cases are covered.
+</p>
+
+<p>
+<b>Example</b> (calculate the length of a <code>List</code> recursively)
+</p>
+
+<pre class="example">
+  const length: &lt;A&gt;(fa: List&lt;A&gt;) =&gt; number = fold(
+    () =&gt; 0,
+    (_, tail) =&gt; 1 + length(tail)
+  )
+</pre>
+</div>
+</div>
+
+<div id="outline-container-why-sum-types" class="outline-4">
+<h4 id="why-sum-types"><span class="section-number-4">3.3.3</span> Why &ldquo;sum&rdquo; types?</h4>
+<div class="outline-text-4" id="text-why-sum-types">
+<p>
+Because the following identity holds true:
+</p>
+
+<pre class="example">
+  C(A | B) = C(A) + C(B)
+</pre>
+
+<blockquote>
+<p>
+The sum of the cardinality is the sum of the cardinalities
+</p>
+</blockquote>
+
+<p>
+<b>Example</b> (the <code>Option</code> type)
+</p>
+
+<pre class="example">
+  type Option&lt;A&gt; =
+    | { _tag: 'None' }
+    | {
+        _tag: 'Some'
+        value: A
+      }
+</pre>
+
+<p>
+From the general formula <code>C(Option&lt;A&gt;) = 1 + C(A)</code> we can derive the
+cardinality of the <code>Option&lt;boolean&gt;</code> type: <code>1 + 2 = 3</code> abitanti.
+</p>
+</div>
+</div>
+
+<div id="outline-container-when-should-i-use-a-sum-type" class="outline-4">
+<h4 id="when-should-i-use-a-sum-type"><span class="section-number-4">3.3.4</span> When should I use a sum type?</h4>
+<div class="outline-text-4" id="text-when-should-i-use-a-sum-type">
+<p>
+When the components would be <b>dependent</b> if implemented with a product
+type.
+</p>
+
+<p>
+<b>Example</b> (component props)
+</p>
+
+<pre class="example">
+  interface Props {
+    editable: boolean
+    onChange?: (text: string) =&gt; void
+  }
+
+  class Textbox extends React.Component&lt;Props&gt; {
+    render() {
+      if (this.props.editable) {
+        // error: Cannot invoke an object which is possibly 'undefined' :(
+        this.props.onChange(...)
+      }
+    }
+  }
+</pre>
+
+<p>
+The problem here is that <code>Props</code> is modelled like a product but
+<code>onChange</code> <b>depends</b> on <code>editable</code>.
+</p>
+
+<p>
+A sum type is a better choice:
+</p>
+
+<pre class="example">
+  type Props =
+    | {
+        type: 'READONLY'
+      }
+    | {
+        type: 'EDITABLE'
+        onChange: (text: string) =&gt; void
+      }
+
+  class Textbox extends React.Component&lt;Props&gt; {
+    render() {
+      switch (this.props.type) {
+        case 'EDITABLE' :
+          this.props.onChange(...) // :)
+        ...
+      }
+    }
+  }
+</pre>
+
+<p>
+<b>Example</b> (node callbacks)
+</p>
+
+<pre class="example">
+  declare function readFile(
+    path: string,
+    //         ↓ ---------- ↓ CallbackArgs
+    callback: (err?: Error, data?: string) =&gt; void
+  ): void
+</pre>
+
+<p>
+The result is modelled with a product type:
+</p>
+
+<pre class="example">
+  type CallbackArgs = [Error | undefined, string | undefined]
+</pre>
+
+<p>
+there&rsquo;s an issue though: it&rsquo;s components are <b>dependent</b>: we either
+receive an error <b>or</b> a string, but not both: but the components are
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">err</th>
+<th scope="col" class="org-left">data</th>
+<th scope="col" class="org-left">legal?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>Error</code></td>
+<td class="org-left"><code>undefined</code></td>
+<td class="org-left">✓</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>undefined</code></td>
+<td class="org-left"><code>string</code></td>
+<td class="org-left">✓</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Error</code></td>
+<td class="org-left"><code>string</code></td>
+<td class="org-left">✘</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>undefined</code></td>
+<td class="org-left"><code>undefined</code></td>
+<td class="org-left">✘</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+A sum type would be a better choice&#x2026;but which sum type?
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-functional-error-handling" class="outline-3">
+<h3 id="functional-error-handling"><span class="section-number-3">3.4</span> Functional error handling</h3>
+<div class="outline-text-3" id="text-functional-error-handling">
+<p>
+Let&rsquo;s see how to handle errors in a functional way.
+</p>
+</div>
+
+<div id="outline-container-the-option-type" class="outline-4">
+<h4 id="the-option-type"><span class="section-number-4">3.4.1</span> The <code>Option</code> type</h4>
+<div class="outline-text-4" id="text-the-option-type">
+<p>
+The type <code>Option</code> represents the effect of a computation which may fail
+or return a type <code>A</code>:
+</p>
+
+<pre class="example">
+  type Option&lt;A&gt; =
+    | { _tag: 'None' } // represents a failure
+    | { _tag: 'Some'; value: A } // represents a success
+</pre>
+
+<p>
+Constructors and pattern matching:
+</p>
+
+<pre class="example">
+  // a nullary constructor can be implemented as a constant
+  const none: Option&lt;never&gt; = { _tag: 'None' }
+
+  const some = &lt;A&gt;(value: A): Option&lt;A&gt; =&gt; ({
+    _tag: 'Some',
+    value
+  })
+
+  const fold = &lt;A, R&gt;(
+    onNone: () =&gt; R,
+    onSome: (a: A) =&gt; R
+  ) =&gt; (fa: Option&lt;A&gt;): R =&gt;
+    fa._tag === 'None' ? onNone() : onSome(fa.value)
+</pre>
+
+<p>
+The <code>Option</code> type can be used to avoid throwing exceptions or
+representing the optional values, thus we can move from&#x2026;
+</p>
+
+<pre class="example">
+  //                this is a lie ↓
+  function head&lt;A&gt;(as: Array&lt;A&gt;): A {
+    if (as.length === 0) {
+      throw new Error('Empty array')
+    }
+    return as[0]
+  }
+
+  let s: string
+  try {
+    s = String(head([]))
+  } catch (e) {
+    s = e.message
+  }
+</pre>
+
+<p>
+&#x2026;where the type systems is in the absolute dark about the possibility
+of a failure, to&#x2026;
+</p>
+
+<pre class="example">
+  //                              ↓ the type system "knows" that this computation may fail
+  function head&lt;A&gt;(as: Array&lt;A&gt;): Option&lt;A&gt; {
+    return as.length === 0 ? none : some(as[0])
+  }
+
+  import { pipe } from 'fp-ts/lib/pipeable'
+
+  const s = pipe(
+    head([]),
+    fold(() =&gt; 'Empty array', a =&gt; String(a))
+  )
+</pre>
+
+<p>
+&#x2026;where <b>the possibility of an error is encoded in the type system</b>.
+</p>
+
+<p>
+Now, let&rsquo;s suppose we want to &ldquo;merge&rdquo; two different =Option&lt;A&gt;=s,: there
+are four different cases:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">x</th>
+<th scope="col" class="org-left">y</th>
+<th scope="col" class="org-left">concat(x, y)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">none</td>
+<td class="org-left">none</td>
+<td class="org-left">none</td>
+</tr>
+
+<tr>
+<td class="org-left">some(a)</td>
+<td class="org-left">none</td>
+<td class="org-left">none</td>
+</tr>
+
+<tr>
+<td class="org-left">none</td>
+<td class="org-left">some(a)</td>
+<td class="org-left">none</td>
+</tr>
+
+<tr>
+<td class="org-left">some(a)</td>
+<td class="org-left">some(b)</td>
+<td class="org-left">?</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+There&rsquo;s an issue in the last case, we need to &ldquo;merge&rdquo; two different
+=A=s.
+</p>
+
+<p>
+Isn&rsquo;t that the job our old good friends <code>Semigroup=s!? We can request an
+instance of a =Semigroup&lt;A&gt;</code> and then derive an instance for the
+semigroup of <code>Option&lt;A&gt;</code>. That&rsquo;s exactly how the combinator
+<code>getApplySemigroup</code> from <code>fp-ts</code> works:
+</p>
+
+<pre class="example">
+  import { semigroupSum } from 'fp-ts/lib/Semigroup'
+  import {
+    getApplySemigroup,
+    some,
+    none
+  } from 'fp-ts/lib/Option'
+
+  const S = getApplySemigroup(semigroupSum)
+
+  S.concat(some(1), none) // none
+  S.concat(some(1), some(2)) // some(3)
+</pre>
+
+<p>
+If we have a monoid instance for <code>A</code> then we can derive a monoid
+instance for <code>Option&lt;A&gt;</code> (via <code>getApplyMonoid</code>) that works this way
+(<code>some(empty)</code> will be the neutral (identity) element):
+</p>
+
+<div class="HTML">
+<p>
+&lt;!&#x2013;
+  TODO: FIX
+&#x2013;&gt;
+</p>
+
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">x</th>
+<th scope="col" class="org-left">y</th>
+<th scope="col" class="org-left">concat(x, y)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">none</td>
+<td class="org-left">none</td>
+<td class="org-left">none</td>
+</tr>
+
+<tr>
+<td class="org-left">some(a)</td>
+<td class="org-left">none</td>
+<td class="org-left">none</td>
+</tr>
+
+<tr>
+<td class="org-left">none</td>
+<td class="org-left">some(a)</td>
+<td class="org-left">none</td>
+</tr>
+
+<tr>
+<td class="org-left">some(a)</td>
+<td class="org-left">some(b)</td>
+<td class="org-left">some(concat(a, b))</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="example">
+  import {
+    getApplyMonoid,
+    some,
+    none
+  } from 'fp-ts/lib/Option'
+
+  const M = getApplyMonoid(monoidSum)
+
+  M.concat(some(1), none) // none
+  M.concat(some(1), some(2)) // some(3)
+  M.concat(some(1), M.empty) // some(1)
+</pre>
+
+<p>
+We can derive another two monoids for <code>Option&lt;A&gt;</code> (for every <code>A</code>):
+</p>
+
+<ol class="org-ol">
+<li><code>getFirstMonoid</code>&#x2026;</li>
+</ol>
+
+<p>
+Monoid returning the left-most non-<code>None</code> value:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">x</th>
+<th scope="col" class="org-left">y</th>
+<th scope="col" class="org-left">concat(x, y)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">none</td>
+<td class="org-left">none</td>
+<td class="org-left">none</td>
+</tr>
+
+<tr>
+<td class="org-left">some(a)</td>
+<td class="org-left">none</td>
+<td class="org-left">some(a)</td>
+</tr>
+
+<tr>
+<td class="org-left">none</td>
+<td class="org-left">some(a)</td>
+<td class="org-left">some(a)</td>
+</tr>
+
+<tr>
+<td class="org-left">some(a)</td>
+<td class="org-left">some(b)</td>
+<td class="org-left">some(a)</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="example">
+  import {
+    getFirstMonoid,
+    some,
+    none
+  } from 'fp-ts/lib/Option'
+
+  const M = getFirstMonoid&lt;number&gt;()
+
+  M.concat(some(1), none) // some(1)
+  M.concat(some(1), some(2)) // some(1)
+</pre>
+
+<ol class="org-ol">
+<li>&#x2026;and it&rsquo;s <b>dual</b>: <code>getLastMonoid</code></li>
+</ol>
+
+<p>
+Monoid returning the right-most non-<code>None</code> value:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">x</th>
+<th scope="col" class="org-left">y</th>
+<th scope="col" class="org-left">concat(x, y)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">none</td>
+<td class="org-left">none</td>
+<td class="org-left">none</td>
+</tr>
+
+<tr>
+<td class="org-left">some(a)</td>
+<td class="org-left">none</td>
+<td class="org-left">some(a)</td>
+</tr>
+
+<tr>
+<td class="org-left">none</td>
+<td class="org-left">some(a)</td>
+<td class="org-left">some(a)</td>
+</tr>
+
+<tr>
+<td class="org-left">some(a)</td>
+<td class="org-left">some(b)</td>
+<td class="org-left">some(b)</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="example">
+  import { getLastMonoid, some, none } from 'fp-ts/lib/Option'
+
+  const M = getLastMonoid&lt;number&gt;()
+
+  M.concat(some(1), none) // some(1)
+  M.concat(some(1), some(2)) // some(2)
+</pre>
+
+<p>
+Example given, <code>getLastMonoid</code> can be used to handle optional values:
+</p>
+
+<pre class="example">
+  import { Monoid, getStructMonoid } from 'fp-ts/lib/Monoid'
+  import {
+    Option,
+    some,
+    none,
+    getLastMonoid
+  } from 'fp-ts/lib/Option'
+
+  /** VSCode settings */
+  interface Settings {
+    /** Controls the font family */
+    fontFamily: Option&lt;string&gt;
+    /** Controls the font size in pixels */
+    fontSize: Option&lt;number&gt;
+    /** Limit the width of the minimap to render at most a certain number of columns. */
+    maxColumn: Option&lt;number&gt;
+  }
+
+  const monoidSettings: Monoid&lt;Settings&gt; = getStructMonoid({
+    fontFamily: getLastMonoid&lt;string&gt;(),
+    fontSize: getLastMonoid&lt;number&gt;(),
+    maxColumn: getLastMonoid&lt;number&gt;()
+  })
+
+  const workspaceSettings: Settings = {
+    fontFamily: some('Courier'),
+    fontSize: none,
+    maxColumn: some(80)
+  }
+
+  const userSettings: Settings = {
+    fontFamily: some('Fira Code'),
+    fontSize: some(12),
+    maxColumn: none
+  }
+
+  /** userSettings overrides workspaceSettings */
+  monoidSettings.concat(workspaceSettings, userSettings)
+  /*
+  { fontFamily: some("Fira Code"),
+    fontSize: some(12),
+    maxColumn: some(80) }
+  */
+</pre>
+</div>
+</div>
+
+<div id="outline-container-the-either-type" class="outline-4">
+<h4 id="the-either-type"><span class="section-number-4">3.4.2</span> The <code>Either</code> type</h4>
+<div class="outline-text-4" id="text-the-either-type">
+<p>
+A common usage of <code>Either</code> is as an alternative for <code>Option</code> for
+handling the possibility of missing values. In such use case, <code>None</code> is
+replaced by <code>Left</code> which holds the useful information. <code>Right</code> replaces
+<code>Some</code>. As a convention <code>Left</code> is used for failure while <code>Right</code> is used
+for success.
+</p>
+
+<pre class="example">
+  type Either&lt;E, A&gt; =
+    | { _tag: 'Left'; left: E } // represents a failure
+    | { _tag: 'Right'; right: A } // represents a success
+</pre>
+
+<p>
+Constructors and pattern matching:
+</p>
+
+<pre class="example">
+  const left = &lt;E, A&gt;(left: E): Either&lt;E, A&gt; =&gt; ({
+    _tag: 'Left',
+    left
+  })
+
+  const right = &lt;E, A&gt;(right: A): Either&lt;E, A&gt; =&gt; ({
+    _tag: 'Right',
+    right
+  })
+
+  const fold = &lt;E, A, R&gt;(
+    onLeft: (left: E) =&gt; R,
+    onRight: (right: A) =&gt; R
+  ) =&gt; (fa: Either&lt;E, A&gt;): R =&gt;
+    fa._tag === 'Left' ? onLeft(fa.left) : onRight(fa.right)
+</pre>
+
+<p>
+Let&rsquo;s get back to the callback example:
+</p>
+
+<pre class="example">
+  declare function readFile(
+    path: string,
+    callback: (err?: Error, data?: string) =&gt; void
+  ): void
+
+  readFile('./myfile', (err, data) =&gt; {
+    let message: string
+    if (err !== undefined) {
+      message = `Error: ${err.message}`
+    } else if (data !== undefined) {
+      message = `Data: ${data.trim()}`
+    } else {
+      // should never happen
+      message = 'The impossible happened'
+    }
+    console.log(message)
+  })
+</pre>
+
+<p>
+we can change the signature in:
+</p>
+
+<pre class="example">
+  declare function readFile(
+    path: string,
+    callback: (result: Either&lt;Error, string&gt;) =&gt; void
+  ): void
+</pre>
+
+<p>
+and consume the API in this new way:
+</p>
+
+<pre class="example">
+  import { flow } from 'fp-ts/lib/function'
+
+  readFile(
+    './myfile',
+    flow(
+      fold(
+        err =&gt; `Error: ${err.message}`,
+        data =&gt; `Data: ${data.trim()}`
+      ),
+      console.log
+    )
+  )
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Andrew Jarrett</p>
+<p class="date">Created: 2020-04-05 Sun 16:38</p>
+</div>
+</body>
+</html>

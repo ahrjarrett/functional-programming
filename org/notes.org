@@ -1,5 +1,27 @@
 
-* Working through Functor article:
+* "Getting Started with fp-ts"
+
+Series of ~7 blogposts by Giulio Canti about using his TypeScript library that
+allows the use of higher-kinded types (kinda?) in JS-land.
+
+These are my notes as I work through the challenging portions of the last 3
+articles, using them to refactor a React app that I created to experiment with
+concurrent mode.
+
+Despite the fact that my =createResource= function seemed to have the same
+signature as =Task=:
+
+#+BEGIN_SRC typescript
+type Task = <A>() => Promise<A>
+#+END_SRC
+
+I spent most of an afternoon trying to get my API calls to compile. I was able
+to get a =TaskEither= implementation working, and concurrent mode with a
+fetch-while-you-render pattern was also working, but on 2 different branches /
+in 2 different worlds, and I simply could not get them to play nice together.
+
+I needed to dig deeper. The main issue was with the _ApiResponse_ call.
+
 
 [[https://dev.to/gcanti/getting-started-with-fp-ts-functor-36ek][Article]]
 
@@ -28,10 +50,12 @@ A: Not much; argument order (in the =fp-ts= spec, anyway):
 #+END_QUOTE
 
 
-** Turn ApiResponse into a Functor:
+** [6]: Functors: Turning =ApiResponse= into a Functor:
 
 
-Let's define a Functor instance using fp-ts called =ApiResponse=
+Let's define a Functor instance using fp-ts called =ApiResponse=;
+
+*Note:* _The HKT type is the =fp-ts= to represent a generic type constructor_
 
 #+BEGIN_SRC typescript
 import { Functor1 } from 'fp-ts/lib/Functor'
@@ -74,7 +98,7 @@ needed binary? more?)
 
  To do that we'll need to cover applicative functors:
 
-** Lifting binary, trinary, n-ary functions
+** [7]: Lifting binary, trinary, n-ary functions
 
 [[https://dev.to/gcanti/getting-started-with-fp-ts-applicative-1kb3][Article]]
 
@@ -191,8 +215,52 @@ where =liftA1 = lift=:
 
 
 
+** [8]: Monads Dammit
 
-* Notes
+I knew the type I needed was a monad, but I did not know which one, and besides
+Functor would be a much cooler band name, but the longer I worked on
+=ApiResponse=, the more nested my types got, the more likely it became that I'd
+need to start chaining my types & thinking about natural transformations if I
+was going to keep using fp-ts.
+
+3 things make a monad:
+- a type constructor =M= which admits a =Functor= instance
+- a function =of= with signature =of: <A>(a: A) => HKT<M, A>=
+- a function =flatMap= with the following structure:
+
+    #+BEGIN_SRC typescript
+    flatMap: <A, B>(f: (a: A) => HKT<M,B>) => ((ma: HKT<M, A>) => HKT<M, B>)
+    #+END_SRC
+
+Laws:
+
+- =of= and =flatMap= are required to obey 3 laws:
+  1. =flatMap(of)=
+| flatMap(of) ° f = f                                            | (Left identity)  |
+| flatMap(f)  ° of = f                                           | (Right identity) |
+| flatMap(h)  ° (flatMap(g) ° f) = flatMap((flatMap(h) ° g)) ° f | (Associativity)  |
+
+To understand why, let's reframe the original problem:
+
+*** The composition of 2 effectful functions (Kleisi arrows)
+
+This gets pretty abstract. Return to this later maybe?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+* Notes()
 
 
 
@@ -277,7 +345,7 @@ Sum types can be *polymorphic* and *recursive*.
   ) => (fa: List<A>): R =>
     fa.type === 'Nil' ? onNil() : onCons(fa.head, fa.tail)
 #+END_EXAMPLE
-
+K
 * ADTs and functional error-handling
   :PROPERTIES:
   :CUSTOM_ID: adts-and-functional-error-handling
