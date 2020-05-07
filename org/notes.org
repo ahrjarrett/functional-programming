@@ -59,9 +59,7 @@ Let's define a Functor instance using fp-ts called =ApiResponse=;
 
 #+BEGIN_SRC typescript
 import { Functor1 } from 'fp-ts/lib/Functor'
-
 export const URI = 'ApiResponse'
-
 export type URI = typeof URI
 
 declare module 'fp-ts/lib/HKT' {
@@ -80,12 +78,6 @@ export interface ApiResponse<A> {
 function map<A, B>(fa: ApiResponse<A>, f: (a: A) => B): ApiResponse<B> {
   return { ...fa, message: f(fa.message) }
 }
-
-// functor instance for "ApiResponse"
-export const functorResponse: Functor1<URI> = {
-  URI,
-  map
-}
 #+END_SRC
 
 But we still need to handle other cases (map is effectful, but unary; what if we
@@ -97,122 +89,6 @@ needed binary? more?)
  | effectful | pure (n-ary, n > 1) | ?           |
 
  To do that we'll need to cover applicative functors:
-
-** [7]: Lifting binary, trinary, n-ary functions
-
-[[https://dev.to/gcanti/getting-started-with-fp-ts-applicative-1kb3][Article]]
-
-*** Understanding the problem:
-
-We need to use currying. You know currying.
-
-The goal here is to compose our pure program with an effectful program... /then/
-to compose another effect, & another, & another, & =n-other= ~(hyuck-hyuck)~
-
-Let's declare the type for liftA2:
-
-#+BEGIN_SRC typescript
-//<A, B>(f: (a: A) => B, fa: Functor<A>): Functor<B>
-liftA2<A, B, C>(f: (a: A) => C) => (fa: F<A>) => (fb: F<B>) => F<C>
-#+END_SRC
-
-But that means we now need to *apply* our curried function, and right now we
-don't have a way to do that:
-
-#+BEGIN_SRC typescript
-// using lift with our curried function:
-lift(g): (fb: F<B>) => F<(c: C) => D>
-#+END_SRC
-
-To do this, we need to =apply= it.
-
-*** Writing apply, or =ap=
-
-#+BEGIN_SRC typescript
-interface Apply<F> {
-  ap: <C, D>(fcd: HKT<F, (c: C) => D>, fc: HKT<F, C>) => HKT<F, D>
-}
-#+END_SRC
-
-Let's add an =of= operation that lets us lift a =value= (instead of lifing a
-function):
-
-#+BEGIN_SRC typescript
-interface Applicative<F> extends Apply<F> {
-  of: <A>(a: A) => HKT<F, A>
-}
-#+END_SRC
-
-
-*** Examples of applicative instances
-
-If any of this is fuzzy, I suggest working through these examples slowly. It can
-definitely be tricky:
-
-- *Array*
-
-  #+BEGIN_SRC typescript
-import { flatten } from 'fp-ts/lib/Array'
-
-const applicativeArray = {
-  map: <A, B>(fa: Array<A>, f: (a: A) => B): Array<B> => fa.map(f),
-  of: <A>(a: A): Array<A> => [a],
-  ap: <A, B>(fab: Array<(a: A) => B>, fa: Array<A>): Array<B> =>
-    flatten(fab.map(f => fa.map(f)))
-}
-  #+END_SRC
-
-- *Option*
-
-  #+BEGIN_SRC typescript
-import { Option, some, none, isNone } from 'fp-ts/lib/Option'
-
-const applicativeOption = {
-  map: <A, B>(fa: Option<A>, f: (a: A) => B): Option<B> =>
-    isNone(fa) ? none : some(f(fa.value)),
-  of: <A>(a: A): Option<A> => some(a),
-  ap: <A, B>(fab: Option<(a: A) => B>, fa: Option<A>): Option<B> =>
-    isNone(fab) ? none : applicativeOption.map(fa, fab.value)
-}
-  #+END_SRC
-
-- *Task*
-
-  #+BEGIN_SRC typescript
-import { Task } from 'fp-ts/lib/Task'
-
-export const applicativeTask = {
-  map: <A, B>(fa: Task<A>, f: (a: A) => B): Task<B> => () => fa().then(f),
-  of: <A>(a: A): Task<A> => () => Promise.resolve(a),
-  ap: <A, B>(fab: Task<(a: A) => B>, fa: Task<A>): Task<B> => () =>
-    Promise.all([fab(), fa()]).then(([f, a]) => f(a))
-}
-  #+END_SRC
-
-*** Actually implementing =liftA2=
-
-I'm gonna be honest; my eyes kind of glazed over.
-
-**** TODO: Write out =liftA2=, given an instance of =apply=
-(by hand / on whiteboard)
-
-**Note:** _liftA1 is just lift, the Functor operation_
-
-#+BEGIN_QUOTE
-Note: =listA1= is just =lift=, the =Functor= operation
-
-- The very end of the article :skull:
-#+END_QUOTE
-
-Our table can now reflect this:
-
-where =liftA1 = lift=:
-
-| Program f | Program g     | Composition     |
-|-----------+---------------+-----------------|
-| pure      | pure          | =g ° f=         |
-| effectful | pure, =n=-ary | =liftAn(g) ° f= |
-
 
 
 ** [8]: Monads Dammit
@@ -346,7 +222,7 @@ Sum types can be *polymorphic* and *recursive*.
     fa.type === 'Nil' ? onNil() : onCons(fa.head, fa.tail)
 #+END_EXAMPLE
 K
-* ADTs and functional error-handling
+*** ADTs and functional error-handling
   :PROPERTIES:
   :CUSTOM_ID: adts-and-functional-error-handling
   :END:
@@ -687,15 +563,31 @@ Let's see how to handle errors in a functional way.
 The type =Option= represents the effect of a computation which may fail
 or return a type =A=:
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC typescript
   type Option<A> =
     | { _tag: 'None' } // represents a failure
     | { _tag: 'Some'; value: A } // represents a success
-#+END_EXAMPLE
+#+END_SRC typescript
 
-Constructors and pattern matching:
+**** Constructors and pattern matching:
 
-#+BEGIN_EXAMPLE
+The =Option= type can be used to avoid throwing exceptions or
+representing the optional values, thus we can move from...
+
+...where *the possibility of an error is encoded in the type system*.
+
+Now, let's suppose we want to "merge" two different =Option<A>=s,: there
+are four different cases:
+
+| x       | y       | concat(x, y) |
+|---------+---------+--------------|
+| none    | none    | none         |
+| some(a) | none    | none         |
+| none    | some(a) | none         |
+| some(a) | some(b) | ?            |
+
+
+#+BEGIN_SRC typescript
   // a nullary constructor can be implemented as a constant
   const none: Option<never> = { _tag: 'None' }
 
@@ -709,12 +601,9 @@ Constructors and pattern matching:
     onSome: (a: A) => R
   ) => (fa: Option<A>): R =>
     fa._tag === 'None' ? onNone() : onSome(fa.value)
-#+END_EXAMPLE
+#+END_SRC
 
-The =Option= type can be used to avoid throwing exceptions or
-representing the optional values, thus we can move from...
-
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC typescript
   //                this is a lie ↓
   function head<A>(as: Array<A>): A {
     if (as.length === 0) {
@@ -729,7 +618,7 @@ representing the optional values, thus we can move from...
   } catch (e) {
     s = e.message
   }
-#+END_EXAMPLE
+#+END_SRC
 
 ...where the type systems is in the absolute dark about the possibility
 of a failure, to...
@@ -747,18 +636,6 @@ of a failure, to...
     fold(() => 'Empty array', a => String(a))
   )
 #+END_EXAMPLE
-
-...where *the possibility of an error is encoded in the type system*.
-
-Now, let's suppose we want to "merge" two different =Option<A>=s,: there
-are four different cases:
-
-| x       | y       | concat(x, y) |
-|---------+---------+--------------|
-| none    | none    | none         |
-| some(a) | none    | none         |
-| none    | some(a) | none         |
-| some(a) | some(b) | ?            |
 
 There's an issue in the last case, we need to "merge" two different
 =A=s.
